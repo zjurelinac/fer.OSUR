@@ -1,0 +1,60 @@
+/*! linker script for memory layout */
+
+/* Its parsed as C before used in linking! */
+
+ENTRY(arch_startup)
+
+/*SECTIONS {
+	.kernel_code LOAD_ADDR :
+	{
+		kernel_code_addr = .;
+
+		*?/boot/startup.asm.o ( .text* )
+		*kernel/?* ( .text* )
+		*arch/?* ( .text* )
+		*api/?* ( .text* )
+	}
+
+	.kernel_data :
+	{
+		kernel_data_addr = .;
+
+		*kernel/?* ( .rodata* .data* )
+		*arch/?* ( .rodata* .data* )
+		*api/?* ( .rodata* .data* )
+	}
+
+	.kernel_bss :
+	{
+		*kernel/?* ( .bss* COMMON* )
+		*arch/?* ( .bss* COMMON* )
+		*api/?* ( .bss* COMMON* )
+
+		. = ALIGN (4096);
+	}
+	kernel_end_addr = .;*/
+
+	//PROG_ALL_START = LOAD_ADDR + SIZEOF( .kernel_code ) + SIZEOF( .kernel_data ) + SIZEOF( .kernel_bss );
+
+	//.prog_all PROG_ADDR : AT ( . )
+	//{
+		//*programs/?* ( .text* )
+		//*programs/?* ( .rodata* .data* .bss* COMMON* )
+		//. = ALIGN (4096);
+	//}
+
+	//PROG_ALL_END = PROG_ALL_START + SIZEOF( .prog_all );
+
+	/*
+	 * what with other sections generated with gcc (various versions)?
+	 * if optimizing for size discard them with: /DISCARD/ : { *(*) }
+	 * if debugging with qemu/gdb they must be included
+	 * - they can be included implicitly, without declaring them here
+	 * - but they will be put behind "kernel_end_addr" so its best to use
+	 *   multiboot loader (QEMU is that)
+	 */
+
+#ifndef DEBUG
+	/DISCARD/ : { *(*) }
+#endif
+}
